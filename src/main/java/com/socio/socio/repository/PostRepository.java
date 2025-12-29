@@ -1,0 +1,7 @@
+package com.socio.socio.repository;
+
+import com.socio.socio.model.Post;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PostRepository extends JpaRepository<Post, Long> {
+}
