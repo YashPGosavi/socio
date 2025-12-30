@@ -1,6 +1,8 @@
 package com.socio.socio.service;
 
 import com.socio.socio.dto.PostResponce;
+import com.socio.socio.event.PostCreatedEvent;
+import com.socio.socio.kafka.PostEventProducer;
 import com.socio.socio.model.Post;
 import com.socio.socio.model.User;
 import com.socio.socio.repository.PostRepository;
@@ -14,10 +16,14 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostEventProducer producer;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository,
+                       UserRepository userRepository,
+                       PostEventProducer producer) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.producer = producer;
     }
 
     public Post createPost(Long userId, String content) {
@@ -28,6 +34,16 @@ public class PostService {
         Post post = new Post();
         post.setContent(content);
         post.setUser(user);
+
+        Post savedPost = postRepository.save(post);
+
+        producer.sendPostCreatedEvent(
+                new PostCreatedEvent(
+                        savedPost.getId(),
+                        userId,
+                        content
+                )
+        );
 
         return postRepository.save(post);
     }
