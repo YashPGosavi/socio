@@ -18,7 +18,7 @@ public class PostController {
     }
 
     @PostMapping
-    public Post createPost(@RequestParam Long userId, @RequestParam String content) {
+    public Post createPost(@RequestAttribute Long userId, @RequestParam String content) {
         return postService.createPost(userId, content);
     }
 
