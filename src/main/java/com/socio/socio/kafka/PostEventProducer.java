@@ -1,6 +1,7 @@
 package com.socio.socio.kafka;
 
 import com.socio.socio.event.PostCreatedEvent;
+import com.socio.socio.event.PostLikedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,15 @@ public class PostEventProducer {
         try{
             String message = objectMapper.writeValueAsString(event);
             kafkaTemplate.send("post-events", message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPostLikedEvent(PostLikedEvent event) {
+        try{
+            String message = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send("post-liked-events", message);
         }catch (Exception e){
             e.printStackTrace();
         }
