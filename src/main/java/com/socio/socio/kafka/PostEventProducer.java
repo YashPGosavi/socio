@@ -1,5 +1,6 @@
 package com.socio.socio.kafka;
 
+import com.socio.socio.event.PostCommentedEvent;
 import com.socio.socio.event.PostCreatedEvent;
 import com.socio.socio.event.PostLikedEvent;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,15 @@ public class PostEventProducer {
             String message = objectMapper.writeValueAsString(event);
             kafkaTemplate.send("post-liked-events", message);
         }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPostCommentedEvent(PostCommentedEvent event) {
+        try {
+            String message = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send("post-commented-events", message);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
