@@ -1,28 +1,28 @@
 package com.socio.socio.kafka;
 
-import com.socio.socio.event.PostLikedEvent;
+import com.socio.socio.event.PostCommentedEvent;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 
 @Component
-public class PostLikedEventConsumer {
+public class PostCommentedEventConsumer {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @KafkaListener(
-        topics = "post-liked-events",
+        topics = "post-commented-events",
         groupId = "notification-group"
     )
     public void consume(String message) {
         try {
-            PostLikedEvent event = objectMapper.readValue(message, PostLikedEvent.class);
-
+            PostCommentedEvent event = objectMapper.readValue(message, PostCommentedEvent.class);
             System.out.println(
-                    "Notification send for Liked Post ID: " + event.getPostId()
-                    + ", Liked By User ID: " + event.getLikedByUserId()
+                " Post " + event.getPostId()
+                + " commented by User " + event.getCommentedByUserId()
+                + " : " + event.getContent()
             );
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
