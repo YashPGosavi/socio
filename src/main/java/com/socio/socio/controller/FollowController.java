@@ -1,7 +1,5 @@
 package com.socio.socio.controller;
 
-import com.socio.socio.model.Follow;
-import com.socio.socio.repository.FollowRepository;
 import com.socio.socio.service.FollowService;
 import org.springframework.web.bind.annotation.*;
 
