@@ -1,5 +1,7 @@
 package com.socio.socio.service;
 
+import com.socio.socio.exception.NotFoundException;
+import com.socio.socio.exception.UnauthorizedException;
 import com.socio.socio.model.User;
 import com.socio.socio.repository.UserRepository;
 import com.socio.socio.security.JwtUtil;
@@ -29,10 +31,10 @@ public class UserService {
 
     public User login(String email, String password) {
       User user = userRepository.findByEmail(email)
-              .orElseThrow(() -> new RuntimeException("User not found"));
+              .orElseThrow(() -> new NotFoundException("User not found"));
 
       if(!passwordEncoder.matches(password, user.getPassword())){
-          throw new RuntimeException("Invalid credentials");
+          throw new UnauthorizedException("Invalid credentials");
       }
       return user;
     }

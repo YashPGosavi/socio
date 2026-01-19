@@ -1,6 +1,7 @@
 package com.socio.socio.kafka;
 
 import com.socio.socio.event.PostCommentedEvent;
+import com.socio.socio.service.NotificationService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
@@ -9,6 +10,11 @@ import tools.jackson.databind.ObjectMapper;
 public class PostCommentedEventConsumer {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final NotificationService notificationService;
+
+    public PostCommentedEventConsumer(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     @KafkaListener(
         topics = "post-commented-events",
@@ -17,10 +23,10 @@ public class PostCommentedEventConsumer {
     public void consume(String message) {
         try {
             PostCommentedEvent event = objectMapper.readValue(message, PostCommentedEvent.class);
-            System.out.println(
-                " Post " + event.getPostId()
-                + " commented by User " + event.getCommentedByUserId()
-                + " : " + event.getContent()
+
+            notificationService.createNotification(
+                    event.getPostId(),
+                    "Your post was commented on by user " + event.getCommentedByUserId()
             );
         } catch (Exception e) {
             e.printStackTrace();

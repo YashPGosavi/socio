@@ -1,6 +1,7 @@
 package com.socio.socio.kafka;
 
 import com.socio.socio.event.PostLikedEvent;
+import com.socio.socio.service.NotificationService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
@@ -9,6 +10,11 @@ import tools.jackson.databind.ObjectMapper;
 public class PostLikedEventConsumer {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final NotificationService notificationService;
+
+    public PostLikedEventConsumer(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     @KafkaListener(
         topics = "post-liked-events",
@@ -18,9 +24,9 @@ public class PostLikedEventConsumer {
         try {
             PostLikedEvent event = objectMapper.readValue(message, PostLikedEvent.class);
 
-            System.out.println(
-                    "Notification send for Liked Post ID: " + event.getPostId()
-                    + ", Liked By User ID: " + event.getLikedByUserId()
+            notificationService.createNotification(
+                    event.getPostId(),
+                    "Your post was liked by user " + event.getLikedByUserId()
             );
         }catch (Exception e){
             e.printStackTrace();

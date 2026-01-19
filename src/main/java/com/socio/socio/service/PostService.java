@@ -2,6 +2,7 @@ package com.socio.socio.service;
 
 import com.socio.socio.dto.PostResponce;
 import com.socio.socio.event.PostCreatedEvent;
+import com.socio.socio.exception.NotFoundException;
 import com.socio.socio.kafka.PostEventProducer;
 import com.socio.socio.model.Post;
 import com.socio.socio.model.User;
@@ -29,7 +30,7 @@ public class PostService {
     public Post createPost(Long userId, String content) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         Post post = new Post();
         post.setContent(content);

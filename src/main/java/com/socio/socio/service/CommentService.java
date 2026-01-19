@@ -1,6 +1,8 @@
 package com.socio.socio.service;
 
 import com.socio.socio.event.PostCommentedEvent;
+import com.socio.socio.exception.NotFoundException;
+import com.socio.socio.exception.UnauthorizedException;
 import com.socio.socio.kafka.PostEventProducer;
 import com.socio.socio.model.Comment;
 import com.socio.socio.model.Post;
@@ -31,10 +33,10 @@ public class CommentService {
 
     public Comment addComment(Long userId, Long postId, String content) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new NotFoundException("Post not found"));
 
         Comment comment = new Comment();
         comment.setContent(content);
@@ -52,10 +54,10 @@ public class CommentService {
 
     public void deleteComment(Long userId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new NotFoundException("Comment not found"));
 
         if (!comment.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized to delete this comment");
+            throw new UnauthorizedException("Unauthorized to delete this comment");
         }
         commentRepository.delete(comment);
     }
