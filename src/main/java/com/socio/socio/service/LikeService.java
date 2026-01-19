@@ -1,6 +1,8 @@
 package com.socio.socio.service;
 
 import com.socio.socio.event.PostLikedEvent;
+import com.socio.socio.exception.BadRequestException;
+import com.socio.socio.exception.NotFoundException;
 import com.socio.socio.kafka.PostEventProducer;
 import com.socio.socio.model.Like;
 import com.socio.socio.model.Post;
@@ -30,14 +32,14 @@ public class LikeService {
 
     public void likePost(Long userId, Long postId) {
         if (likeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
-            throw new IllegalArgumentException("Post already liked by user");
+            throw new BadRequestException("Post already liked by user");
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new NotFoundException("Post not found"));
 
         Like like = new Like();
         like.setUser(user);
@@ -52,7 +54,7 @@ public class LikeService {
 
     public  void unlikePost(Long userId, Long postId) {
         Like like = likeRepository.findByUserIdAndPostId(userId, postId)
-                .orElseThrow(() -> new IllegalArgumentException("Like not found"));
+                .orElseThrow(() -> new NotFoundException("Like not found"));
 
         likeRepository.delete(like);
     }
