@@ -1,7 +1,9 @@
 package com.socio.socio.service;
 
+import com.socio.socio.event.UserFollowedEvent;
 import com.socio.socio.exception.BadRequestException;
 import com.socio.socio.exception.NotFoundException;
+import com.socio.socio.kafka.PostEventProducer;
 import com.socio.socio.model.Follow;
 import com.socio.socio.model.User;
 import com.socio.socio.repository.FollowRepository;
@@ -13,10 +15,12 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final PostEventProducer producer;
 
-    public FollowService(FollowRepository followRepository, UserRepository userRepository) {
+    public FollowService(FollowRepository followRepository, UserRepository userRepository, PostEventProducer producer) {
         this.followRepository = followRepository;
         this.userRepository = userRepository;
+        this.producer = producer;
     }
 
     public void followUser(Long followerId, Long followingId) {
@@ -39,6 +43,9 @@ public class FollowService {
         follow.setFollowing(following);
 
         followRepository.save(follow);
+        producer.sendUserFollowedEvent(
+                new UserFollowedEvent(followerId, followingId)
+        );
 
     }
 

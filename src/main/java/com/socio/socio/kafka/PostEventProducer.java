@@ -3,6 +3,7 @@ package com.socio.socio.kafka;
 import com.socio.socio.event.PostCommentedEvent;
 import com.socio.socio.event.PostCreatedEvent;
 import com.socio.socio.event.PostLikedEvent;
+import com.socio.socio.event.UserFollowedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -19,19 +20,19 @@ public class PostEventProducer {
     }
 
     public void sendPostCreatedEvent(PostCreatedEvent event) {
-        try{
+        try {
             String message = objectMapper.writeValueAsString(event);
             kafkaTemplate.send("post-events", message);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void sendPostLikedEvent(PostLikedEvent event) {
-        try{
+        try {
             String message = objectMapper.writeValueAsString(event);
             kafkaTemplate.send("post-liked-events", message);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -44,4 +45,14 @@ public class PostEventProducer {
             e.printStackTrace();
         }
     }
+
+    public void sendUserFollowedEvent(UserFollowedEvent event) {
+        try {
+            String message = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send("user-followed-events", message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
