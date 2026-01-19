@@ -1,7 +1,6 @@
 package com.socio.socio.controller;
 
 import com.socio.socio.service.LikeService;
-import lombok.Getter;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
