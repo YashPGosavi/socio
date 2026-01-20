@@ -2,14 +2,13 @@ package com.socio.socio.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
-public class FeedPostResponse {
+public class UserStatsResponse {
 
-    private Long postId;
-    private String content;
     private Long userId;
-    private String username;
-
+    private String name;
+    private long followersCount;
 }
