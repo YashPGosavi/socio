@@ -2,6 +2,7 @@ package com.socio.socio.service;
 
 import com.socio.socio.exception.NotFoundException;
 import com.socio.socio.exception.UnauthorizedException;
+import com.socio.socio.model.Role;
 import com.socio.socio.model.User;
 import com.socio.socio.repository.UserRepository;
 import com.socio.socio.security.JwtUtil;
@@ -26,6 +27,7 @@ public class UserService {
 
     public User register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 
@@ -41,7 +43,11 @@ public class UserService {
 
     public String loginAndGetToken(String email, String password) {
         User user = login(email, password);
-        return jwtUtil.generateToken(user.getId(), user.getEmail());
+        return jwtUtil.generateToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 
     public User createUser(User user) {

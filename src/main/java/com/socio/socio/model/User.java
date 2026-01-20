@@ -17,4 +17,8 @@ public class User {
     private String email;
 
     private String password;
+
+    // Default role is USER
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
