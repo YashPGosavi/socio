@@ -16,6 +16,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     long countByFollowingId(Long followingId);
 
     // Custom query to get list of following IDs for a given follower ID
-    @Query("SELECT f.following.id FROM Follow f WHERE f.follower.id = :followerId")
+    @Query("""
+            SELECT f.following.id
+            FROM Follow f
+            WHERE f.follower.id = :followerId
+       \s""")
     List<Long> findFollowingIds(@Param("followerId") Long followerId);
 }
