@@ -5,11 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class FeedPostResponse {
-
+public class PostStatsResponse {
     private Long postId;
     private String content;
-    private Long userId;
-    private String username;
-
+    private long count;
 }

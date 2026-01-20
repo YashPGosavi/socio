@@ -1,5 +1,6 @@
 package com.socio.socio.repository;
 
+import com.socio.socio.dto.UserStatsResponse;
 import com.socio.socio.model.Follow;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,11 +16,22 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     long countByFollowerId(Long followerId);
     long countByFollowingId(Long followingId);
 
-    // Custom query to get list of following IDs for a given follower ID
     @Query("""
             SELECT f.following.id
             FROM Follow f
             WHERE f.follower.id = :followerId
-       \s""")
+       """)
     List<Long> findFollowingIds(@Param("followerId") Long followerId);
+
+    @Query("""
+            SELECT new com.socio.socio.dto.UserStatsResponse(
+                f.following.id,
+                f.following.name,
+                COUNT(f)
+            )
+            FROM Follow f
+            GROUP BY f.following.id, f.following.name
+            ORDER BY COUNT(f) DESC
+        """)
+    List<UserStatsResponse> findUsersOrderedByFollowers();
 }
