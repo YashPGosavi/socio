@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -18,6 +20,8 @@ public class User {
 
     private String password;
 
+    private LocalDate birthDate;
+  
     // Default role is USER
     @Enumerated(EnumType.STRING)
     private Role role;
